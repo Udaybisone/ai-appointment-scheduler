@@ -1,10 +1,5 @@
 import { visionModel } from './geminiClient.js';
 
-/**
- * runOCR
- * Input: image file from multer (buffer)
- * Output: { text: string, confidence: number }
- */
 export const runOCR = async (file) => {
   try {
     const base64Image = file.buffer.toString('base64');
@@ -24,8 +19,7 @@ Return ONLY the plain text you see, no explanations.`;
 
     const response = await result.response;
     const text = response.text().trim();
-
-    // Here we just assume a confidence (you could ask model to output a numeric confidence)
+    
     return {
       text,
       confidence: 0.9

@@ -3,17 +3,6 @@ import { textModel } from './geminiClient.js';
 
 const TIMEZONE = 'Asia/Kolkata';
 
-/**
- * normalizeEntities
- * Input: entities from extractEntities
- * Output:
- * {
- *   normalized: { date, time, tz, department_canonical },
- *   normalization_confidence,
- *   needs_clarification,
- *   reason
- * }
- */
 export const normalizeEntities = async (entities) => {
   const { date_phrase, time_phrase, department } = entities || {};
 

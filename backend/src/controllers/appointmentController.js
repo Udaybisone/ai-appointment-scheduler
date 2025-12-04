@@ -54,6 +54,7 @@ export const parseAppointment = async (req, res, next) => {
     // STEP 2 - ENTITY EXTRACTION
     const { entities, entities_confidence, needs_clarification: entitiesAmbiguous, reason: entitiesReason } =
       await extractEntities(rawText);
+      
 
     if (entitiesAmbiguous) {
       return res.status(200).json({
