@@ -37,5 +37,19 @@ This project is built using:
 
 ### 1️⃣ Clone project
 ```bash
-git clone https://github.com/<your-username>/ai-appointment-scheduler.git
+git clone https://github.com/Udaybisone/ai-appointment-scheduler.git
 cd ai-appointment-scheduler
+```
+
+### 2️⃣ Setup Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+### 3️⃣ Setup Backend
+```bash
+cd backend
+npm install
+npm run dev
+```
