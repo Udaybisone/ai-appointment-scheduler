@@ -48,7 +48,7 @@ const AppointmentForm = () => {
             </div>
           </div>
           <span className="hidden md:inline-flex text-[11px] px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/40">
-            Powered by Gemini · Asia/Kolkata
+            Created by Uday Kumar Bisone
           </span>
         </div>
       </header>

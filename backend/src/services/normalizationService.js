@@ -1,7 +1,7 @@
-import { DateTime } from 'luxon';
-import { textModel } from './geminiClient.js';
+import { DateTime } from "luxon";
+import { textModel } from "./geminiClient.js";
 
-const TIMEZONE = 'Asia/Kolkata';
+const TIMEZONE = "Asia/Kolkata";
 
 /**
  * normalizeEntities
@@ -23,7 +23,7 @@ export const normalizeEntities = async (entities) => {
       normalized: null,
       normalization_confidence: 0,
       needs_clarification: true,
-      reason: 'Ambiguous date/time or department'
+      reason: "Ambiguous date/time or department",
     };
   }
 
@@ -64,18 +64,15 @@ Department phrase: "${department}"
 `;
 
   try {
-    const result = await textModel.generateContent([
-      systemPrompt,
-      userPrompt
-    ]);
+    const result = await textModel.generateContent([systemPrompt, userPrompt]);
 
     const response = await result.response;
     const rawText = response.text().trim();
 
     // Sometimes the model may add extra text. Safely extract JSON.
     let jsonText = rawText;
-    const firstBrace = rawText.indexOf('{');
-    const lastBrace = rawText.lastIndexOf('}');
+    const firstBrace = rawText.indexOf("{");
+    const lastBrace = rawText.lastIndexOf("}");
     if (firstBrace !== -1 && lastBrace !== -1) {
       jsonText = rawText.slice(firstBrace, lastBrace + 1);
     }
@@ -91,19 +88,19 @@ Department phrase: "${department}"
         normalized: null,
         normalization_confidence: 0,
         needs_clarification: true,
-        reason: 'Ambiguous date/time or department'
+        reason: "Ambiguous date/time or department",
       };
     }
 
     return parsed;
   } catch (err) {
-    console.error('Normalization error:', err);
+    console.error("Normalization error:", err);
     return {
       normalized: null,
       normalization_confidence: 0,
       needs_clarification: true,
       // Generic message to match your guardrail spec
-      reason: 'Ambiguous date/time or department'
+      reason: "Ambiguous date/time or department",
     };
   }
 };
