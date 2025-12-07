@@ -23,6 +23,57 @@ The AI Appointment Scheduler Assistant converts natural-language or image-based 
 
 ---
 
+## 🏗️ Architecture
+```text
+ai-appointment-scheduler/
+│
+├─ backend/
+│  ├─ package.json
+│  ├─ .env.example
+│  ├─ .gitignore
+│  └─ src/
+│     ├─ app.js
+│     ├─ server.js
+│     │
+│     ├─ routes/
+│     │  └─ appointmentRoutes.js
+│     │
+│     ├─ controllers/
+│     │  └─ appointmentController.js
+│     │
+│     ├─ services/
+│     │  ├─ geminiClient.js
+│     │  ├─ ocrService.js
+│     │  ├─ nlpService.js
+│     │  └─ normalizationService.js
+│     │
+│     └─ middleware/
+│        └─ errorMiddleware.js
+│
+├─ frontend/
+│  ├─ public/
+│  │  └─ vite.svg
+│  │
+│  ├─ package.json
+│  ├─ index.html
+│  ├─ vite.config.js
+│  │
+│  └─ src/
+│     ├─ main.jsx
+│     ├─ App.jsx
+│     │
+│     ├─ api/
+│     │  └─ client.js
+│     │
+│     └─ components/
+│        ├─ AppointmentForm.jsx
+│        ├─ JsonViewer.jsx
+│        └─ ResultPanel.jsx
+│
+└─ README.md
+
+```
+
 ## ⚙️ Installation / Setup
 
 ### 1️⃣ Clone project
@@ -121,4 +172,38 @@ Parses user input (text or image) and returns the full AI pipeline output.
 }
 ```
 
+---
+
+## 🤖 Effective Use of AI for Chaining & Validation
+
+I didn’t just call the AI once and trust whatever it returned.  
+The whole project is built around **chaining multiple AI steps** and **validating each step** before moving on.
+
+Here’s how I used AI more carefully instead of blindly:
+
+- **Step-wise AI calls**  
+  - 1st call: OCR (if image) → get raw text  
+  - 2nd call: Entity extraction → get `date_phrase`, `time_phrase`, `department`  
+  - 3rd call: Normalization → turn those phrases into final ISO `date`, `time`, `tz`, `department_canonical`
+
+- **Structured JSON at each step**  
+  Each AI call is asked to return **strict JSON**, which I then parse in the backend.  
+  If the JSON is invalid or fields are missing, I don’t continue the pipeline.
+
+- **Validation & guardrails**  
+  - If the model can’t confidently find date/time/department, I mark it as `needs_clarification`.  
+  - Normalization also has its own check: if the phrase is too vague (like “this weekend”), I don’t pretend to know the answer.  
+  - In these cases, the API returns:
+    ```json
+    { "status": "needs_clarification", "message": "Ambiguous date/time or department" }
+    ```
+
+- **Separation of concerns**  
+  - OCR, entity extraction, and normalization are in **separate service files**.  
+  - This makes it easy to test each step individually and see where something went wrong.
+
+Overall, AI is used as a **reasoning engine** inside a controlled pipeline.  
+The backend is responsible for checking, validating, and deciding whether the result is safe to use or if the user should be asked for clarification.
+
+---
 
